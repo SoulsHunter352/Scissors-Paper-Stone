@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Scissors Paper Stone</string>
+    <string name="stone">Камень</string>
+    <string name="scissors">Ножницы</string>
+    <string name="paper">Бумага</string>
+    <string name="play">Играть</string>
+</resources>
