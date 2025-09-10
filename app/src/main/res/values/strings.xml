@@ -4,4 +4,7 @@
     <string name="scissors">Ножницы</string>
     <string name="paper">Бумага</string>
     <string name="play">Играть</string>
+    <string name="settings">Настройки</string>
+    <string name="win_points">Количество очков для победы</string>
+    <string name="back">Назад</string>
 </resources>
