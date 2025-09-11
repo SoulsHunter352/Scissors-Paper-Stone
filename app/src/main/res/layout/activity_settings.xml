@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:padding="20dp">
 
     <ImageButton
@@ -25,6 +26,7 @@
 
     <TextView
         android:id="@+id/settings"
+        android:textColor="#171717"
         android:text="@string/settings"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -34,11 +36,12 @@
         app:layout_constraintTop_toTopOf="parent"/>
     <TextView
         android:id="@+id/win_points"
+        android:textColor="#171717"
         android:text="@string/win_points"
         android:textSize="18sp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintTop_toBottomOf="@id/settings"
@@ -47,9 +50,9 @@
         />
     <TextView
         android:id="@+id/win_points_value"
+        android:textColor="#171717"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@id/win_points_seekbar"
         app:layout_constraintLeft_toLeftOf="@id/win_points_seekbar"
@@ -58,12 +61,16 @@
         android:id="@+id/win_points_seekbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:max="99"
-        android:layout_marginTop="40dp"
+        android:max="9"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
+        android:progressBackgroundTint="#171717"
+        android:progressTint="#2F2FB5"
+        android:thumbTint="#707070"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintLeft_toRightOf="@id/win_points"
-        app:layout_constraintTop_toBottomOf="@id/settings"
+        app:layout_constraintTop_toTopOf="@id/win_points"
+        app:layout_constraintBottom_toBottomOf="@id/win_points"
         app:layout_constraintRight_toRightOf="parent"
         />
 
