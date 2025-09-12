@@ -25,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_settings);
 
-        mPrefs = getSharedPreferences(getLocalClassName(), MODE_PRIVATE);
+        mPrefs = getSharedPreferences("game_settings", MODE_PRIVATE);
         currentWinPoints = mPrefs.getInt("win_points", 1);
 
         SeekBar seekBar = findViewById(R.id.win_points_seekbar);

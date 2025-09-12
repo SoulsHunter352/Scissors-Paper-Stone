@@ -7,4 +7,6 @@
     <string name="settings">Настройки</string>
     <string name="win_points">Количество очков для победы</string>
     <string name="back">Назад</string>
+    <string name="player">Игрок</string>
+    <string name="computer">Компьютер</string>
 </resources>
