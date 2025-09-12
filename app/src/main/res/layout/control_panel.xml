@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        style="@style/ControlButton"
+        android:id="@+id/stone"
+        android:src="@drawable/stone"
+        android:contentDescription="@string/stone"/>
+    <ImageButton
+        style="@style/ControlButton"
+        android:id="@+id/paper"
+        android:src="@drawable/paper"
+        android:contentDescription="@string/paper"
+        />
+    <ImageButton
+        style="@style/ControlButton"
+        android:id="@+id/scissors"
+        android:src="@drawable/scissors"
+        android:contentDescription="@string/scissors"/>
+
+</LinearLayout>
