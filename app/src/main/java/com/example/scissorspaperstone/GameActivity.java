@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -19,6 +20,9 @@ public class GameActivity extends AppCompatActivity {
     private static final byte PAPER = 1;
     private static final byte SCISSORS = 2;
     private static final byte[] choices = {STONE, PAPER, SCISSORS};
+    private static final byte PLAYER_WIN = 0;
+    private static final byte COMP_WIN = 1;
+    private static final byte DRAW = 2;
     private Random random;
 
     private SharedPreferences prefs;
@@ -44,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
 
         playerText = findViewById(R.id.player_points);
         compText = findViewById(R.id.computer_points);
+        statusText = findViewById(R.id.round_status);
         setPointsText();
 
 
@@ -70,14 +75,36 @@ public class GameActivity extends AppCompatActivity {
         compText.setText(String.valueOf(compPoints));
     }
 
-    public void setRoundStatus(String status){
-        statusText.setText(status);
+    public void setRoundStatus(byte roundStatus){
+        if (roundStatus == PLAYER_WIN){
+            statusText.setText("Победа игрока в раунде");
+            statusText.setTextColor(ContextCompat.getColor(this, R.color.win));
+        }
+        else if(roundStatus == DRAW){
+            statusText.setText("Ничья");
+            statusText.setTextColor(ContextCompat.getColor(this, R.color.black));
+        }
+
+        else if(roundStatus == COMP_WIN){
+            statusText.setText("Победа компьютера в раунде");
+            statusText.setTextColor(ContextCompat.getColor(this, R.color.lost));
+        }
     }
 
     public void simulateRound(byte playerChoice){
         byte compChoice = choices[random.nextInt(choices.length)];
         if(compChoice == playerChoice){
-            setRoundStatus("Ничья");
+            setRoundStatus(DRAW);
+        }
+        else if((playerChoice == STONE && compChoice == SCISSORS) ||
+                (playerChoice == PAPER && compChoice == STONE) ||
+                (playerChoice == SCISSORS && compChoice == PAPER)){
+            playerPoints++;
+            setRoundStatus(PLAYER_WIN);
+        }
+        else{
+            compPoints++;
+            setRoundStatus(COMP_WIN);
         }
     }
 }
