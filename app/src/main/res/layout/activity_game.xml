@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Победа игрока в раунде"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/player_points"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -73,7 +73,32 @@
         android:layout_marginTop="40dp"
         />
 
+    <ImageView
+        style="@style/ChoiceIcon"
+        android:id="@+id/player_choice"
+        app:layout_constraintLeft_toLeftOf="@id/player"
+        app:layout_constraintRight_toRightOf="@id/player"
+        app:layout_constraintTop_toBottomOf="@id/round_status"
+        app:layout_constraintBottom_toTopOf="@id/control_panel"
+        android:contentDescription="Выбор игрока"
+        android:src="@drawable/scissors"
+        android:scaleX="-1"
+        />
+
+    <ImageView
+        style="@style/ChoiceIcon"
+        android:id="@+id/comp_choice"
+        app:layout_constraintLeft_toLeftOf="@id/computer"
+        app:layout_constraintRight_toRightOf="@id/computer"
+        app:layout_constraintTop_toBottomOf="@id/round_status"
+        app:layout_constraintBottom_toTopOf="@id/control_panel"
+        android:contentDescription="Выбор компьютера"
+        android:src="@drawable/scissors"
+        android:scaleX="-1"
+        android:scaleY="-1"/>
+
     <include
+        android:id="@+id/control_panel"
         layout="@layout/control_panel"
         android:layout_height="wrap_content"
         android:layout_width="0dp"

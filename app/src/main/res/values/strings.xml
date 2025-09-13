@@ -9,4 +9,6 @@
     <string name="back">Назад</string>
     <string name="player">Игрок</string>
     <string name="computer">Компьютер</string>
+    <string name="restart">Начать заново</string>
+    <string name="close_game">В меню</string>
 </resources>

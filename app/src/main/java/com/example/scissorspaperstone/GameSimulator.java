@@ -1,31 +1,36 @@
 package com.example.scissorspaperstone;
 
+import java.util.List;
 import java.util.Random;
 
 public class GameSimulator {
-    public static final byte STONE = 0;
-    public static final byte PAPER = 1;
-    public static final byte SCISSORS = 2;
-    private static final byte[] choices = {STONE, PAPER, SCISSORS};
-    public static final byte PLAYER_WIN = 0;
-    public static final byte COMP_WIN = 1;
-    public static final byte DRAW = 2;
-    private final Random random;
-
-    {
-        random = new Random();
+    public enum Choice{
+        STONE,
+        PAPER,
+        SCISSORS
     }
 
-    public byte simulateRound(byte playerChoice){
-        byte compChoice = choices[random.nextInt(choices.length)];
+    public enum Result{
+        PLAYER_WIN,
+        DRAW,
+        COMP_WIN
+    }
+    private static final List<Choice> CHOICES = List.of(Choice.values());
+    private static final Random RANDOM = new Random();
+
+    public static Choice getCompChoice(){
+        return CHOICES.get(RANDOM.nextInt(CHOICES.size()));
+    }
+
+    public static Result simulateRound(Choice playerChoice, Choice compChoice){
         if(compChoice == playerChoice)
-            return DRAW;
-        else if((playerChoice == STONE && compChoice == SCISSORS) ||
-                (playerChoice == PAPER && compChoice == STONE) ||
-                (playerChoice == SCISSORS && compChoice == PAPER)){
-            return PLAYER_WIN;
+            return Result.DRAW;
+        else if((playerChoice == Choice.STONE && compChoice == Choice.SCISSORS) ||
+                (playerChoice == Choice.PAPER && compChoice == Choice.STONE) ||
+                (playerChoice == Choice.SCISSORS && compChoice == Choice.PAPER)){
+            return Result.PLAYER_WIN;
         }
         else
-            return COMP_WIN;
+            return Result.COMP_WIN;
     }
 }
