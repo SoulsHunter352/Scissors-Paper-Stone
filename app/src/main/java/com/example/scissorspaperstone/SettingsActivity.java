@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class SettingsActivity extends AppCompatActivity {
 
     private SharedPreferences mPrefs;
+    private SharedPreferences gamePrefs;
     private int currentWinPoints;
     private TextView winPointsText;  // Текст, отображающий кол-во очков
 
@@ -26,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         mPrefs = getSharedPreferences("game_settings", MODE_PRIVATE);
+        gamePrefs = getSharedPreferences("game_info", MODE_PRIVATE);
         currentWinPoints = mPrefs.getInt("win_points", 1);
 
         SeekBar seekBar = findViewById(R.id.win_points_seekbar);
@@ -35,12 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
         updateWinPointsText(currentWinPoints);
 
         ImageButton back_button = findViewById(R.id.back_button);
-        back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickBackButton(v);
-            }
-        });
+        back_button.setOnClickListener(this::clickBackButton);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -68,8 +65,15 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(mPrefs.getInt("win_points", 1) == currentWinPoints)
+            return;
+        // Перезаписываем настройки игры
         SharedPreferences.Editor ed = mPrefs.edit();
         ed.putInt("win_points", currentWinPoints);
+        ed.apply();
+        // Удаляем данные о текущей игре
+        ed = gamePrefs.edit();
+        ed.clear();
         ed.apply();
     }
 

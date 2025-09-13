@@ -11,4 +11,7 @@
     <string name="computer">Компьютер</string>
     <string name="restart">Начать заново</string>
     <string name="close_game">В меню</string>
+    <string name="player_choice">Выбор игрока</string>
+    <string name="comp_choice">Выбор компьютера</string>
+    <string name="continue_game">Продолжить</string>
 </resources>

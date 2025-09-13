@@ -30,7 +30,6 @@
         android:id="@+id/player_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10"
         android:textColor="@color/black"
         android:textSize="40sp"
         app:layout_constraintTop_toBottomOf="@id/player"
@@ -53,7 +52,6 @@
         android:id="@+id/computer_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="10"
         android:textSize="40sp"
         android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@id/computer"
@@ -64,7 +62,6 @@
         android:id="@+id/round_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Победа игрока в раунде"
         android:textSize="25sp"
         android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@id/player_points"
@@ -80,8 +77,7 @@
         app:layout_constraintRight_toRightOf="@id/player"
         app:layout_constraintTop_toBottomOf="@id/round_status"
         app:layout_constraintBottom_toTopOf="@id/control_panel"
-        android:contentDescription="Выбор игрока"
-        android:src="@drawable/scissors"
+        android:contentDescription="@string/player_choice"
         android:scaleX="-1"
         />
 
@@ -92,8 +88,7 @@
         app:layout_constraintRight_toRightOf="@id/computer"
         app:layout_constraintTop_toBottomOf="@id/round_status"
         app:layout_constraintBottom_toTopOf="@id/control_panel"
-        android:contentDescription="Выбор компьютера"
-        android:src="@drawable/scissors"
+        android:contentDescription="@string/comp_choice"
         android:scaleX="-1"
         android:scaleY="-1"/>
 

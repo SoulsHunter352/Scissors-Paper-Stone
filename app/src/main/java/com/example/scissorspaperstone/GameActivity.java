@@ -24,6 +24,7 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
     private int winPoints;
     private int playerPoints;
     private int compPoints;
+    private boolean isGameCompleted;
     private TextView playerText;
     private TextView compText;
     private TextView statusText;
@@ -44,14 +45,26 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
         prefs = getSharedPreferences("game_settings", MODE_PRIVATE);
         winPoints = prefs.getInt("win_points", 1);
         prefs = getSharedPreferences("game_info", MODE_PRIVATE);
-        playerPoints = prefs.getInt("player_points", 0);
-        compPoints = prefs.getInt("comp_points", 0);
+
+        playerPoints = 0;
+        compPoints = 0;
+        isGameCompleted = false;  // По умолчанию отмечаем игру как незавершенную
+
+        Bundle args = getIntent().getExtras();
+        if(args != null){
+            if(args.getBoolean("is_continue")){
+                playerPoints = prefs.getInt("player_points", 0);
+                compPoints = prefs.getInt("comp_points", 0);
+                isGameCompleted = prefs.getBoolean("is_game_completed", false);
+            }
+        }
 
         playerText = findViewById(R.id.player_points);
         compText = findViewById(R.id.computer_points);
         statusText = findViewById(R.id.round_status);
-        playerText.setText(String.valueOf(playerPoints));
-        compText.setText(String.valueOf(compPoints));
+
+        prepareGame();
+
         playerChoice = findViewById(R.id.player_choice);
         compChoice = findViewById(R.id.comp_choice);
 
@@ -59,13 +72,11 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(this::clickBackButton);
         ImageButton stoneButton = findViewById(R.id.stone);
-        stoneButton.setOnClickListener(v -> {
-            simulateRound(GameSimulator.Choice.STONE);
-        });
+        stoneButton.setOnClickListener(v -> simulateRound(GameSimulator.Choice.STONE));
         ImageButton paperButton = findViewById(R.id.paper);
-        paperButton.setOnClickListener(v -> {simulateRound(GameSimulator.Choice.PAPER);});
+        paperButton.setOnClickListener(v -> simulateRound(GameSimulator.Choice.PAPER));
         ImageButton scissorsButton = findViewById(R.id.scissors);
-        scissorsButton.setOnClickListener(v -> {simulateRound(GameSimulator.Choice.SCISSORS);});
+        scissorsButton.setOnClickListener(v -> simulateRound(GameSimulator.Choice.SCISSORS));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -73,16 +84,24 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
             return insets;
         });
     }
-    /*
+
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences.Editor ed = prefs.edit();
-        ed.putInt("player_points", playerPoints);
-        ed.putInt("comp_points", compPoints);
-        ed.apply();
+        if(!isGameCompleted){
+            SharedPreferences.Editor ed = prefs.edit();
+            ed.putInt("player_points", playerPoints);
+            ed.putInt("comp_points", compPoints);
+            ed.putBoolean("is_game_completed", isGameCompleted);
+            ed.apply();
+        }
     }
-     */
+
+    public void prepareGame(){
+        playerText.setText(String.valueOf(playerPoints));
+        compText.setText(String.valueOf(compPoints));
+        statusText.setText("");
+    }
 
     public void clickBackButton(View view){
         finish();
@@ -125,22 +144,23 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
         if (playerPoints != winPoints && compPoints != winPoints)
             return;
         String gameResult = playerPoints == winPoints ? "Победа!" : "Поражение!";
+        playerPoints = 0;
+        compPoints = 0;
+        isGameCompleted = true;
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.clear();
+        ed.apply();
         ResultDialogFragment dialog = ResultDialogFragment.newInstance(gameResult);
         dialog.show(getSupportFragmentManager(), "result_dialog");
     }
 
     public void onDialogPositiveClick(DialogFragment dialog){
-        playerPoints = 0;
-        compPoints = 0;
-        playerText.setText(String.valueOf(playerPoints));
-        compText.setText(String.valueOf(compPoints));
+        prepareGame();
+        isGameCompleted = false;  // Если начинаем заново игру, то считаем её как начавшуюся
         dialog.dismiss();
     }
 
     public void onDialogNegativeClick(DialogFragment dialog){
-        SharedPreferences.Editor ed = prefs.edit();
-        ed.clear();
-        ed.apply();
         finish();
     }
 }
