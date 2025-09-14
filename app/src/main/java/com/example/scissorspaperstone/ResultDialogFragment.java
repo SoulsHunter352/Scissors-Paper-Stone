@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class ResultDialogFragment extends DialogFragment {
@@ -22,6 +23,12 @@ public class ResultDialogFragment extends DialogFragment {
         args.putString("dialog_title", title);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setCancelable(false);  // Запрещаем возможность закрывать окно нажатием мимо него
     }
 
     @NonNull

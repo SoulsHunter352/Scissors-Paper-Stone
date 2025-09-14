@@ -1,9 +1,14 @@
 package com.example.scissorspaperstone;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +35,13 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
     private TextView statusText;
     private ImageView playerChoice;
     private ImageView compChoice;
+    private Animation playerAnim;
+    private Animation compAnim;
+    private Animation statusAnim;
+    private Animation playerPointsAnim;
+    private Animation compPointsAnim;
     private final Map<GameSimulator.Choice, Drawable> choicePicture = new HashMap<>();
+    private ImageButton[] choiceButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +73,48 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
         playerText = findViewById(R.id.player_points);
         compText = findViewById(R.id.computer_points);
         statusText = findViewById(R.id.round_status);
-
-        prepareGame();
-
         playerChoice = findViewById(R.id.player_choice);
         compChoice = findViewById(R.id.comp_choice);
+        prepareGame();
 
+        playerAnim = AnimationUtils.loadAnimation(this, R.anim.player_anim);
+        playerAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                statusText.setVisibility(VISIBLE);
+                statusText.startAnimation(statusAnim);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                setChoicesEnabled(false);
+            }
+        });
+        compAnim = AnimationUtils.loadAnimation(this, R.anim.comp_animation);
+        statusAnim = AnimationUtils.loadAnimation(this, R.anim.status_anim);
+        statusAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                setChoicesEnabled(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+        });
+        playerPointsAnim = AnimationUtils.loadAnimation(this, R.anim.points_anim);
+        compPointsAnim = AnimationUtils.loadAnimation(this, R.anim.points_anim);
 
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(this::clickBackButton);
@@ -77,6 +124,8 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
         paperButton.setOnClickListener(v -> simulateRound(GameSimulator.Choice.PAPER));
         ImageButton scissorsButton = findViewById(R.id.scissors);
         scissorsButton.setOnClickListener(v -> simulateRound(GameSimulator.Choice.SCISSORS));
+
+        choiceButtons = new ImageButton[]{stoneButton, paperButton, scissorsButton};
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -100,19 +149,15 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
     public void prepareGame(){
         playerText.setText(String.valueOf(playerPoints));
         compText.setText(String.valueOf(compPoints));
-        statusText.setText("");
+        playerChoice.setImageDrawable(null);
+        compChoice.setImageDrawable(null);
+        statusText.setVisibility(INVISIBLE);
+        //statusText.setText("");
     }
 
     public void clickBackButton(View view){
         finish();
     }
-    public void simulateRound(GameSimulator.Choice playerChoice){
-        setPlayerChoice(playerChoice);
-        GameSimulator.Choice compChoice = GameSimulator.getCompChoice();
-        setCompChoice(compChoice);
-        setRoundStatus(GameSimulator.simulateRound(playerChoice, compChoice));
-    }
-
     public void setPlayerChoice(GameSimulator.Choice choice){
         playerChoice.setImageDrawable(choicePicture.get(choice));
     }
@@ -120,24 +165,52 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
     public void setCompChoice(GameSimulator.Choice choice){
         compChoice.setImageDrawable(choicePicture.get(choice));
     }
+
+    public void startAnimation(){
+        playerChoice.startAnimation(playerAnim);
+        compChoice.startAnimation(compAnim);
+
+        //statusText.startAnimation(statusAnim);
+    }
+
+    public void setChoicesEnabled(boolean enabled){
+        int alpha = enabled ? 255 : 128;
+        for(var button: choiceButtons){
+            button.setEnabled(enabled);
+            button.setImageAlpha(alpha);
+        }
+    }
+
+    public void simulateRound(GameSimulator.Choice playerChoice){
+        //setChoicesEnabled(false);
+        statusText.setVisibility(INVISIBLE);
+        setPlayerChoice(playerChoice);
+        GameSimulator.Choice compChoice = GameSimulator.getCompChoice();
+        setCompChoice(compChoice);
+        setRoundStatus(GameSimulator.simulateRound(playerChoice, compChoice));
+        //setChoicesEnabled(true);
+    }
+
     public void setRoundStatus(GameSimulator.Result roundStatus){
         if (roundStatus == GameSimulator.Result.PLAYER_WIN){
             playerPoints++;
             statusText.setText("Победа игрока в раунде");
             statusText.setTextColor(ContextCompat.getColor(this, R.color.win));
             playerText.setText(String.valueOf(playerPoints));
+            playerText.startAnimation(playerPointsAnim);
         }
         else if(roundStatus == GameSimulator.Result.DRAW){
             statusText.setText("Ничья");
             statusText.setTextColor(ContextCompat.getColor(this, R.color.black));
         }
-
         else if(roundStatus == GameSimulator.Result.COMP_WIN){
             compPoints++;
             statusText.setText("Победа компьютера в раунде");
             statusText.setTextColor(ContextCompat.getColor(this, R.color.lost));
             compText.setText(String.valueOf(compPoints));
+            compText.startAnimation(compPointsAnim);
         }
+        startAnimation();
         checkWin();
     }
     public void checkWin(){
