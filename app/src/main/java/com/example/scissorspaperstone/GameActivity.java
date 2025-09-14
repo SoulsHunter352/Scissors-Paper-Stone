@@ -30,6 +30,7 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
     private int playerPoints;
     private int compPoints;
     private boolean isGameCompleted;
+    private GameSimulator.Result result;
     private TextView playerText;
     private TextView compText;
     private TextView statusText;
@@ -196,8 +197,13 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
             playerPoints++;
             statusText.setText("Победа игрока в раунде");
             statusText.setTextColor(ContextCompat.getColor(this, R.color.win));
-            playerText.setText(String.valueOf(playerPoints));
-            playerText.startAnimation(playerPointsAnim);
+            String text = String.valueOf(playerPoints);
+            //playerText.setText(String.valueOf(playerPoints));
+            playerText.postDelayed(() -> {
+                playerText.setText(text);
+                playerText.startAnimation(playerPointsAnim);
+            }, 350);
+            //playerText.startAnimation(playerPointsAnim);
         }
         else if(roundStatus == GameSimulator.Result.DRAW){
             statusText.setText("Ничья");
@@ -207,8 +213,13 @@ public class GameActivity extends AppCompatActivity implements ResultDialogFragm
             compPoints++;
             statusText.setText("Победа компьютера в раунде");
             statusText.setTextColor(ContextCompat.getColor(this, R.color.lost));
-            compText.setText(String.valueOf(compPoints));
-            compText.startAnimation(compPointsAnim);
+            String text = String.valueOf(compPoints);
+            compText.postDelayed(() -> {
+                compText.setText(text);
+                compText.startAnimation(compPointsAnim);
+            }, 350);
+            //compText.setText(String.valueOf(compPoints));
+            //compText.startAnimation(compPointsAnim);
         }
         startAnimation();
         checkWin();
